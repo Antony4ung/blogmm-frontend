@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import AppLayout from "./components/AppLayout";
+import ProtectedRoute from "./navigation/ProtectedRoute";
+import Page404 from "./pages/404";
+import BlogCreate from "./pages/BlogCreate";
+import BlogDetail from "./pages/BlogDetail";
+import Edit from "./pages/Edit";
+import Home from "./pages/Home";
+import ImageUpload from "./pages/ImageUpload";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import UserProfile from './pages/UserProfile'
+export default function App() {
 
-function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppLayout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<Page404 />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/edit" element={<Edit />} />
+        <Route path="/:blogId" element={<BlogDetail/>}/>
+        <Route path="/user/:userId" element={<UserProfile/>}/>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/create" element={<BlogCreate />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/imageUpload" element={<ImageUpload />} />
+      </Routes>
+    </AppLayout>
   );
 }
-
-export default App;

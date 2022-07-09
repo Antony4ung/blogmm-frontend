@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid, Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cookie from "cookiejs";
@@ -8,6 +8,7 @@ export default function Profile() {
   const [person, setPerson] = useState(null);
   const [data, setData] = useState(null);
   const [openModal,setOpenModal] = useState(false)
+  const [loading,setLoading] = useState(true)
 
  
 
@@ -16,10 +17,12 @@ export default function Profile() {
   const user = cookie.get("user");
 
   const getBlogByAuthorId = async () => {
+    setLoading(true)
     const { data } = await axios.get(
-      `https://blogmm12.herokuapp.com/api/v1/blogs/author/${person?.id}`
+      `${process.env.REACT_APP_URL}/api/v1/blogs/author/${person?.id}`
     );
     setData(data);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -61,12 +64,14 @@ export default function Profile() {
                 mb: 4,
               }}
             >
-              <img
-                style={{ width: 150, height: "auto", borderRadius: "50%" }}
-                crossOrigin="true"
-                src={person.photoUrl}
-                alt={person.name}
-              />
+            
+              <Box sx={{width:"150px"}}>
+                {person?.photoUrl ? <img
+                  style={{ width: '100%', height: "auto", borderRadius: "50%" }}
+                  src={person?.photoUrl}
+                  alt={person.name}
+                /> : <Skeleton variant="circular" width={150} height={150} />}
+              </Box>
             </Box>
 
             <Box
@@ -116,7 +121,7 @@ export default function Profile() {
         maxWidth="xl"
         sx={{ py: 3, width: "100%" }}
       >
-      <h2 style={{margin:"20px 0"}}>Blogs of {person?.name}</h2>
+      {data?.blogs.length > 0 && <h2 style={{margin:"20px 0"}}>Blogs of {person?.name}</h2>}
         {data?.blogs && (
           <Grid sx={{ px: { xs: 2, md: 0 } }} container spacing={3}>
             {data?.blogs.map((blog) => (
@@ -127,6 +132,11 @@ export default function Profile() {
           </Grid>
         )}
       </Container>
+      {
+          loading && <Box sx={{width:"100%",height:"30vh",display:"flex",justifyContent:"center",alignItems:"center"}}>
+            <CircularProgress/>
+          </Box>
+        }
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,8 +11,9 @@ import { toast } from "react-toastify";
 import logo from "../assets/images/logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import formData from "form-data";
 import SelectForm from "../components/SelectForm";
+import { storage } from "../firebase";
+import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage";
 
 export default function BlogEdit() {
 
@@ -23,7 +24,62 @@ export default function BlogEdit() {
   const [photoFile, setPhotoFile] = useState("");
   const [category, setCategory] = useState(state.category);
   const [content, setContent] = useState(state.content);
-    const blogId = state._id;
+  const blogId = state._id;
+  const authorId = state.author._id
+
+    const [photoUrl,setPhotoUrl] = useState('')
+  const [progress,setProgress] = useState(0)
+  const [progressShow,setProgressShow] = useState(false)
+
+
+  const fileChange = (e) => {
+    setPhotoFile(e.target.files[0]);
+  }
+
+
+  useEffect(()=>{
+    imageUrlGetting(photoFile)
+
+  },[photoFile])
+
+
+  const imageUrlGetting = (selectedFile) => {
+    setProgressShow(false);
+
+    const fileName = new Date().getTime() + selectedFile?.name;
+
+    const storageRef = ref(
+      storage, `/images/${fileName}`
+    );
+
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        setProgressShow(true);
+
+        const uploaded = Math.floor(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        
+        setProgress(uploaded);
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          // handleInputState(name, url);
+          setPhotoUrl(url)
+          setProgressShow()
+        });
+      }
+    );
+
+
+  }
+  
 
 
   const theme = useTheme();
@@ -32,21 +88,10 @@ export default function BlogEdit() {
   const blogEdit = async (e) => {
     e.preventDefault();
 
-    const reqData = new formData();
-    reqData.append("title", title);
-    reqData.append("description", description);
-    reqData.append("content", content);
-    reqData.append("category", category);
-    reqData.append("author", state.author.id);
-    reqData.append("image", photoFile);
-    reqData.append('blogId',blogId)
-
-    //POST form values
     axios
       .post(
-        `https://blogmm12.herokuapp.com/api/v1/blogs/edit/${blogId}`,
-        reqData
-        // "Content-Type:multipart/form-data"
+        `${process.env.REACT_APP_URL}/api/v1/blogs/edit/${blogId}`,
+        {title,description,content,category,author:authorId,photoUrl,blogId}
       )
       .then((res) => {
         navigate("/");
@@ -87,7 +132,6 @@ export default function BlogEdit() {
           sx={{ width: "100%", mb: 5 }}
           noValidate
           autoComplete="off"
-          encType="multipart/form-data"
         >
           <Box>
             <TextField
@@ -99,14 +143,15 @@ export default function BlogEdit() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </Box>
-          <Box>
+          <Box sx={{my: 2,}}>
+            {progressShow && !isNaN(progress) && <h5 style={{textAlign:"right"}}>{progress}% uploaded</h5>}
             <TextField
               sx={{ width: "100%", my: 2, minWidth: "300px" }}
               label="UserPhoto"
               variant="standard"
               type="file"
               name="image"
-              onChange={(e) => setPhotoFile(e.target.files[0])}
+              onChange={fileChange}
             />
           </Box>
           <Box>

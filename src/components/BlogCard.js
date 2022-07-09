@@ -18,7 +18,7 @@ export default function RecipeReviewCard({blog,isEditable}) {
   const deleteBlog = (id) =>{
     axios
       .delete(
-        `{process.env.BASE_URL}/blogs/${id}`
+        `${process.env.REACT_APP_URL}/api/v1/blogs/${id}`
       )
       .then((res) => {
         navigate("/");
@@ -33,7 +33,7 @@ export default function RecipeReviewCard({blog,isEditable}) {
     <Card >
       <CardHeader
         avatar={
-          <img style={{width:30,height:30,borderRadius:"50%"}} src={blog.author.photoUrl} crossOrigin='true' alt={blog.author.name}/>
+          <img style={{width:30,height:30,borderRadius:"50%"}} src={blog.author.photoUrl}  alt={blog.author.name}/>
         }
         action={
           isEditable && (<>
@@ -51,7 +51,7 @@ export default function RecipeReviewCard({blog,isEditable}) {
       <CardMedia
         component="img"
         height="194"
-        image={blog.photoUrl} crossOrigin='true'
+        image={blog.photoUrl} 
         alt="Paella dish"
       />
       <CardContent sx={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>

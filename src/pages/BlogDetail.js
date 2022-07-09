@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -7,16 +7,19 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function BlogDetail() {
   const [detailData, setDetailData] = useState({});
+  const [loading,setLoading] = useState(true)
 
   let { blogId } = useParams();
 
   const navigate = useNavigate();
 
   const getBlodDetails = async () => {
+    setLoading(true)
     const { data } = await axios.get(
-      `https://blogmm12.herokuapp.com/api/v1/blogs/blogId/${blogId}`
+      `${process.env.REACT_APP_URL}/api/v1/blogs/blogId/${blogId}`
     );
     setDetailData(data.blog);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -30,8 +33,8 @@ export default function BlogDetail() {
         display: "flex",
         justifyContent: "center",
         width: "100%",
-        height: "88vh",
-        mb: { xs: 5, sm: 5 },
+        minHeight: "88vh",
+        my: { xs: 5, sm: 5 },
       }}
     >
       {detailData.author && (
@@ -48,7 +51,6 @@ export default function BlogDetail() {
               style={{ width: "250px", height: "auto", margin: "30px 0" }}
               src={detailData?.photoUrl}
               alt=""
-              crossOrigin="true"
             />
           </Box>
 
@@ -137,6 +139,11 @@ export default function BlogDetail() {
           </Box>
         </Box>
       )}
+      {
+          loading && <Box sx={{width:"100%",height:"88vh",display:"flex",justifyContent:"center",alignItems:"center"}}>
+            <CircularProgress/>
+          </Box>
+        }
     </Box>
   );
 }

@@ -11,14 +11,15 @@ import { toast } from "react-toastify";
 import logo from "../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import formData from "form-data";
 import cookie from "cookiejs";
 import SelectForm from "../components/SelectForm";
+import { storage } from "../firebase";
+import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage";
 
 export default function BlogCreate() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [photoFile, setPhotoFile] = useState("");
+  const [selectedFile, setSelectedFile] = useState("");
   const [category, setCategory] = useState("sport");
   const [content, setContent] = useState("");
 
@@ -31,24 +32,69 @@ export default function BlogCreate() {
     setUser(JSON.parse(userFound));
   }, [user]);
 
+
+  const [photoUrl,setPhotoUrl] = useState(null)
+  const [progress,setProgress] = useState(0)
+  const [progressShow,setProgressShow] = useState(false)
+
+
+  const fileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  }
+
+
+  useEffect(()=>{
+    imageUrlGetting(selectedFile)
+
+  },[selectedFile])
+
+
+  const imageUrlGetting = (selectedFile) => {
+    setProgressShow(true);
+
+    const fileName = new Date().getTime() + selectedFile?.name;
+
+    const storageRef = ref(
+      storage, `/images/${fileName}`
+    );
+
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const uploaded = Math.floor(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(uploaded);
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          // handleInputState(name, url);
+          setPhotoUrl(url)
+          setProgressShow(false)
+        });
+      }
+    );
+
+
+  }
+
+
   
   const onBlogCreate = async (e) => {
     e.preventDefault();
 
-    const reqData = new formData();
-    reqData.append("title", title);
-    reqData.append("description", description);
-    reqData.append("content", content);
-    reqData.append("category", category);
-    reqData.append("author", user.id);
-    reqData.append("image", photoFile);
-
-    //POST form values
+    
     axios
       .post(
-        `https://blogmm12.herokuapp.com/api/v1/blogs/create`,
-        reqData
-        // "Content-Type:multipart/form-data"
+        `${process.env.REACT_APP_URL}/api/v1/blogs/create`,
+        {
+          title,description,content,category,author:user.id,photoUrl
+        }
       )
       .then((res) => {
         navigate("/");
@@ -101,14 +147,15 @@ export default function BlogCreate() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </Box>
-          <Box>
+          <Box sx={{my: 2,}}>
+            {progressShow && !isNaN(progress) &&  <h5 style={{textAlign:"right"}}>{progress}% uploaded</h5>}
             <TextField
-              sx={{ width: "100%", my: 2, minWidth: "300px" }}
+              sx={{ width: "100%",  minWidth: "300px" }}
               label="UserPhoto"
               variant="standard"
               type="file"
               name="image"
-              onChange={(e) => setPhotoFile(e.target.files[0])}
+              onChange={fileChange}
             />
           </Box>
           <Box>
@@ -143,7 +190,7 @@ export default function BlogCreate() {
             <SelectForm category={category} setCategory={setCategory} />
           </Box>
 
-          <Button onClick={onBlogCreate} variant="contained" sx={{ mt: 2 }}>
+          <Button disabled={progress < 99 ? true : false} onClick={onBlogCreate} variant="contained" sx={{ mt: 2 }}>
             Create
           </Button>
         </Box>

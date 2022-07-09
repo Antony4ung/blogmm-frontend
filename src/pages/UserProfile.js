@@ -15,7 +15,7 @@ export default function UserProfile() {
   const navigate = useNavigate();
 
   const getUserData = async (id) => {
-    const { data } = await axios.get(`https://blogmm12.herokuapp.com/api/v1/user/${id}`);
+    const { data } = await axios.get(`${process.env.BASE_URL}/api/v1/user/${id}`);
     setPerson(data);
     return;
   };
@@ -37,7 +37,7 @@ export default function UserProfile() {
 
   const getBlogByAuthorId = async (id) => {
     const { data } = await axios.get(
-      `https://blogmm12.herokuapp.com/api/v1/blogs/author/${id}`
+      `${process.env.REACT_APP_URL}/api/v1/blogs/author/${id}`
     );
     setData(data);
     return;

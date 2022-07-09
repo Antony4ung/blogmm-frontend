@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from "@mui/material";
+import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard";
@@ -7,20 +7,26 @@ import SelectForm from "../components/SelectForm";
 export default function Home() {
   const [category, setCategory] = useState("all");
   const [data, setData] = useState(null);
+  const [loading,setLoading] = useState(true)
 
   const getBlogs = async () => {
-    const { data } = await axios.get(`https://blogmm12.herokuapp.com/api/v1/blogs`);
+    setLoading(true)
+    const { data } = await axios.get(`${process.env.REACT_APP_URL}/api/v1/blogs`);
     setData(data);
+    setLoading(false)
     return;
   };
 
   const getBlogsByCategory = async (category) => {
+    setLoading(true)
     const { data } = await axios.get(
-      `https://blogmm12.herokuapp.com/api/v1/blogs/category/${category}`
+      `${process.env.REACT_APP_URL}/api/v1/blogs/category/${category}`
     );
     setData(data);
+    setLoading(false)
     return;
   };
+  
 
   useEffect(() => {
     if (category === "all") {
@@ -49,7 +55,12 @@ export default function Home() {
               </Grid>
             ))}
           </Grid>
-        )}
+        ) }
+        {
+          loading && <Box sx={{width:"100%",height:"88vh",display:"flex",justifyContent:"center",alignItems:"center"}}>
+            <CircularProgress/>
+          </Box>
+        }
       </Container>
     </>
   );

@@ -7,7 +7,6 @@ import BlogCreate from "./pages/BlogCreate";
 import BlogDetail from "./pages/BlogDetail";
 import Edit from "./pages/Edit";
 import Home from "./pages/Home";
-import ImageUpload from "./pages/ImageUpload";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -33,7 +32,6 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
-        <Route path="/imageUpload" element={<ImageUpload />} />
       </Routes>
     </AppLayout>
   );

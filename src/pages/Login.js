@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import logo from "../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import cookie from "cookiejs";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
 
   const onSignIn = async (e) => {
     e.preventDefault();
@@ -17,18 +19,11 @@ export default function Login() {
       return;
     }
     //POST form values
-    const res = await fetch(`https://blogmm12.herokuapp.com/api/v1/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+    const {data} = await axios.post(`${process.env.REACT_APP_URL}/api/v1/auth/login`, {
+      email,password
     });
     //Await for data for any desirable next steps
-    const data = await res.json();
+    
 
     if (data.success === true) {
       cookie.set("token", data.token, 2);

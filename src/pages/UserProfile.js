@@ -15,8 +15,9 @@ export default function UserProfile() {
   const navigate = useNavigate();
 
   const getUserData = async (id) => {
-    const { data } = await axios.get(`${process.env.BASE_URL}/api/v1/user/${id}`);
-    setPerson(data);
+    const { data } = await axios.get(`${process.env.REACT_APP_URL}/api/v1/user/${id}`);
+    setPerson(data.user);
+    // console.log(data)
     return;
   };
 
@@ -59,7 +60,7 @@ export default function UserProfile() {
           mt: 5,
         }}
       >
-        {person?.user && (
+        {person && (
           <Box sx={{ minWidth: "350px" }}>
             <Box
               sx={{
@@ -71,10 +72,9 @@ export default function UserProfile() {
               }}
             >
               <img
-                style={{ width: 150, height: "auto", borderRadius: "50%" }}
-                crossOrigin="true"
-                src={person?.user?.photoUrl}
-                alt={person?.user?.name}
+                style={{ width: 150, height: "auto"}}
+                src={person?.photoUrl}
+                alt={person?.name}
               />
             </Box>
 
@@ -88,7 +88,7 @@ export default function UserProfile() {
               }}
             >
               <p>person Name</p>
-              <h4> {person?.user?.name}</h4>
+              <h4> {person?.name}</h4>
             </Box>
             <Box
               sx={{
@@ -100,7 +100,7 @@ export default function UserProfile() {
               }}
             >
               <p>person ID</p>
-              <h4> {person?.user?._id}</h4>
+              <h4> {person?._id}</h4>
             </Box>
             <Box
               sx={{
@@ -112,13 +112,13 @@ export default function UserProfile() {
               }}
             >
               <p>person Email</p>
-              <h4> {person?.user?.email}</h4>
+              <h4> {person?.email}</h4>
             </Box>
           </Box>
         )}
       </Box>
       <Container maxWidth="xl" sx={{ py: 5, width: "100%" }}>
-      <h2 style={{margin:"20px 0"}}>Blogs of {person?.user.name}</h2>
+      <h2 style={{margin:"20px 0"}}>Blogs of {person?.name}</h2>
         {data?.blogs && (
           <Grid sx={{ px: { xs: 2, md: 0 } }} container spacing={3}>
             {data?.blogs.map((blog) => (

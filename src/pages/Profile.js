@@ -67,7 +67,7 @@ export default function Profile() {
             
               <Box sx={{width:"150px"}}>
                 {person?.photoUrl ? <img
-                  style={{ width: '100%', height: "auto", borderRadius: "50%" }}
+                  style={{ width: '100%', height: "auto" }}
                   src={person?.photoUrl}
                   alt={person.name}
                 /> : <Skeleton variant="circular" width={150} height={150} />}

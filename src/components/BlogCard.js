@@ -22,6 +22,7 @@ export default function RecipeReviewCard({blog,isEditable}) {
       )
       .then((res) => {
         toast.success("Blog deleted")
+        window.location.reload()
       })
       .catch(err=>toast.error(err))
   };

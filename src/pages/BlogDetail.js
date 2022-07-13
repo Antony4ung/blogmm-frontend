@@ -61,6 +61,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
+          
             <h4 style={{ fontSize: 12, fontStyle: "italic" }}>Blog Title</h4>
             <p style={{ fontSize: "larger" }}> {detailData?.title}</p>
           </Box>

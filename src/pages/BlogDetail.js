@@ -61,7 +61,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
-            <h4 style={{ fontSize: 15, fontStyle: "italic" }}>Blog Title</h4>
+            <h4 style={{ fontSize: 12, fontStyle: "italic" }}>Blog Title</h4>
             <p style={{ fontSize: "larger" }}> {detailData?.title}</p>
           </Box>
           <Box
@@ -71,7 +71,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
-            <h4 style={{ fontSize: 15, fontStyle: "italic" }}>
+            <h4 style={{ fontSize: 12, fontStyle: "italic" }}>
               Blog Description
             </h4>
             <p style={{ fontSize: "larger" }}> {detailData?.description}</p>
@@ -83,7 +83,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
-            <h4 style={{ fontSize: 15, fontStyle: "italic" }}>Blog Content</h4>
+            <h4 style={{ fontSize: 12, fontStyle: "italic" }}>Blog Content</h4>
             <p style={{ fontSize: "larger" }}> {detailData?.content}</p>
           </Box>
           <Box
@@ -93,7 +93,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
-            <h4 style={{ fontSize: 15, fontStyle: "italic" }}>Blog Category</h4>
+            <h4 style={{ fontSize: 12, fontStyle: "italic" }}>Blog Category</h4>
             <p style={{ fontSize: "larger" }}> {detailData?.category}</p>
           </Box>
           <Box
@@ -103,7 +103,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
-            <h4 style={{ fontSize: 15, fontStyle: "italic" }}>Author</h4>
+            <h4 style={{ fontSize: 12, fontStyle: "italic" }}>Author</h4>
             <p
               onClick={() => navigate(`/user/${detailData.author._id}`)}
               style={{ fontSize: "larger",cursor:"pointer" }}
@@ -119,7 +119,7 @@ export default function BlogDetail() {
               width: "100%",
             }}
           >
-            <h4 style={{ fontSize: 15, fontStyle: "italic" }}>UpdatedAt</h4>
+            <h4 style={{ fontSize: 12, fontStyle: "italic" }}>UpdatedAt</h4>
             <p style={{ fontSize: "larger" }}>
               {" "}
               {moment(detailData?.createdAt).format("llll")}

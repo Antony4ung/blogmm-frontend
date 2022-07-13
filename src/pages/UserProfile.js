@@ -118,7 +118,7 @@ export default function UserProfile() {
         )}
       </Box>
       <Container maxWidth="xl" sx={{ py: 5, width: "100%" }}>
-      <h2 style={{margin:"20px 0"}}>Blogs of {person?.name}</h2>
+      {person?.name && <h2 style={{margin:"20px 0"}}>Blogs of {person?.name}</h2>}
         {data?.blogs && (
           <Grid sx={{ px: { xs: 2, md: 0 } }} container spacing={3}>
             {data?.blogs.map((blog) => (

@@ -15,11 +15,11 @@ export default function SelectForm({category,setCategory,all}) {
             onChange={e=>setCategory(e.target.value)}
             size="small"
           >
-            {all&&<MenuItem value={"all"}>all</MenuItem>}
-            <MenuItem value={"sport"}>Sports</MenuItem>
-            <MenuItem value={"health"}>Health</MenuItem>
-            <MenuItem value={"education"}>Education</MenuItem>
-            <MenuItem value={"love"}>Love</MenuItem>
+            {all&&<MenuItem value={"All"}>all</MenuItem>}
+            <MenuItem value={"Sport"}>Sports</MenuItem>
+            <MenuItem value={"Health"}>Health</MenuItem>
+            <MenuItem value={"Education"}>Education</MenuItem>
+            <MenuItem value={"Love"}>Love</MenuItem>
           </Select>
     </Box>
    

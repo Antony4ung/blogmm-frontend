@@ -15,7 +15,7 @@ export default function SelectForm({category,setCategory,all}) {
             onChange={e=>setCategory(e.target.value)}
             size="small"
           >
-            {all&&<MenuItem value={"All"}>all</MenuItem>}
+            {all&&<MenuItem value={"all"}>all</MenuItem>}
             <MenuItem value={"Sport"}>Sports</MenuItem>
             <MenuItem value={"Health"}>Health</MenuItem>
             <MenuItem value={"Education"}>Education</MenuItem>
